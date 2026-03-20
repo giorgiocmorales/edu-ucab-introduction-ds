@@ -1,0 +1,207 @@
+---
+title: "Clase 13 - Básicos en RMarkdown"
+subtitle: "Este es mi subtitulo" 
+author: 
+  - Integrante A
+  - Integrante B
+  - Integrante C
+  - Integrante D 
+  
+date: "2025-06-23"
+output: pdf_document
+urlcolor: blue # Agrego este argumento que hace que hyperlinks sean azules! 
+---
+
+# Edicion de texto en Markdown
+
+-   Así agregamos links a R Markdown:
+
+Este es un documento de R Markdown. Markdown es una herramienta de sintaxis de formato para crear documentos HTML, PDF y MS Word. Para más detalles sobre el uso de R Markdown, consulte <http://rmarkdown.rstudio.com>.
+
+-   Podemos también agregar hipervínculos (links de referencia que se insertan en texto):
+
+Este es un ejemplo para agregar hipervínculos. Puedes revisar más informacion sobre R Markdown en este [enlace](http://rmarkdown.rstudio.com).
+
+-   Así especificamos los títulos en RMarkdown:
+
+# Título 1 (nivel de mayor jerarquía)
+
+## Título 2 (nivel de segunda jerarquía)
+
+### Título 3 (nivel de tercera jerarquía)
+
+-   Podemos editar nuestro texto agregando formato:
+
+Este es un ejemplo de texto **bold**. Tambien puedo **usarlo en oraciones completas o varias palabras**.
+
+Podemos configurar palabras en **negrita** y en *cursiva*.
+
+> Podemos incluir un párrafo con un tabulado mayor al del párrafo regular.
+
+Asimismo, en cualquier parte del documento podemos incluir una nota al pie [^1].
+
+[^1]: Texto de la nota al pie. En cualquier parte del documento, aquí lo haremos en esta nota al pie, podemos definir enlaces que [redireccione a páginas web](https://cran.r-project.org/).
+
+# Construcción de una lista numerada
+
+1.  Elemento 1
+2.  Elemento 2
+3.  Elemento de prueba
+
+# Construcción de una lista sin números
+
+-   Elemento 1
+-   Elemento 2
+-   Test elemento 3
+-   Test elemento 4
+
+# Lista sin números, con sublista numerada (tabulado es de 4 espacios)
+
+
+-   Elemento 1
+    1.1. This is my first sub-element
+-   Elemento 2
+    1.  Sub elemento 1.
+    2.  Sub elemento2.
+    3.  Otro sub elemento
+-   En R Markdown tambien podemos agregar ecuaciones de LaTex: Se pueden agregar ecuaciones de LaTex en el texto $\alpha = \beta_0 + \beta_1 \times coefficient$ y continuar escribiendo. Poner un solo símbolo de dolar en la ecuacion nos permite esto
+
+Tambien podemos agregar las ecuaciones centradas (agregando dos simbolos de dolar) $$\alpha = \beta_0 + \beta_1 \times coefficient$$ [Este enlace](https://ashki23.github.io/markdown-latex.html) es una guia util para distintos operadores, símbolos y alfabeto griego para que puedan hacer sus ecuaciones.
+
+\pagebreak
+
+# Tablas en R Markdown
+
+En R Markdown usualmente querremos agregar tablas, provenientes de dataframes en muchos casos, para mostrar en nuestros informes. Podemos agregar un chunk de codigo para esto:
+
+
+```{r}
+
+
+
+```
+
+
+
+```{r tabla 1, echo = FALSE, message = FALSE, warning=FALSE}
+# Esto es un chunk de codigo en R en el que especificamos que no se imprima el codigo 
+# pero si el resultado (echo = FALSE) y que no se impriman mensajes de ejecucion 
+
+# Tenemos que cargar en Markdown TODOS los paquetes que vayamos a usar en el chunk de codigo 
+library(knitr)
+library(dslabs)
+library(dplyr)
+
+data(murders)
+
+# Puedo procesar datos crudos directamente desde R Markdown, como hemos venido haciendo en las clases. 
+murders_table <- murders %>% 
+  group_by(region) %>% 
+  dplyr::summarise('Tasa de homicidio promedio' = weighted.mean(total, population), 
+                   'Numero de estados' = n(), 
+                   'Poblacion total por region' = sum(population)) %>% 
+  ungroup() %>% 
+  dplyr::rename('Region' = region)
+  
+
+# Quiero una tabla de murders_table
+
+# Puedo simplemente imprimir el data.frame 
+murders_table
+
+# O tambien imprimirlo con formato LaTex de knitr (mucho mas bonito)
+kable(murders_table, caption = 'Homicidios por armas de fuego en EEUU para 2010')
+
+```
+
+\pagebreak
+
+Podemos hacer exactamente lo mismo con tablas de regresion!
+
+```{r tabla 4, echo = FALSE, message = FALSE, warning= FALSE}
+
+library(HistData)
+library(fixest) # Otro paquete util para regresiones, en particular con efectos fijos
+library(huxtable)
+
+data(GaltonFamilies)
+
+galton_regression <- feols(childHeight ~ midparentHeight , GaltonFamilies)
+
+# Podemos imprimir la tabla 
+summary(galton_regression)
+
+# O podemos usar huxreg para imprimirla mas bonita
+huxreg(galton_regression,
+       statistics = c("N. obs." = "nobs", 
+                               "R squared" = "r.squared", 
+                               "F statistic" = "statistic",
+                               "P value" = "p.value"), 
+       stars = c(`*` = 0.1, `**` = 0.05, `***` = 0.01),
+       # Importantisimo incluir TODOS los nombres de coeficientes que deseen 
+       # Si no, no aparecen en la tabla
+       coefs = c("Intercepto" = "(Intercept)", 
+                 "Altura promedio padres (pulgadas)" = "midparentHeight")) %>% 
+  set_caption("Altura de hijos en funcion de la altura de padres") %>% 
+  set_caption_pos("top")
+
+
+# Si tenemos mas de una regresion y queremos especificar coeficientes entre ambas, podemos hacerlo con huxreg
+
+galton_regression_2 <- feols(childHeight ~ midparentHeight + childNum, GaltonFamilies)
+
+huxreg(galton_regression, galton_regression_2,
+       statistics = c("N. obs." = "nobs", 
+                               "R squared" = "r.squared", 
+                               "F statistic" = "statistic",
+                               "P value" = "p.value"), 
+       stars = c(`*` = 0.1, `**` = 0.05, `***` = 0.01),
+       # Importantisimo incluir TODOS los nombres de coeficientes que deseen 
+       # Si no, no aparecen en la tabla
+       coefs = c("Intercepto" = "(Intercept)", 
+                 "Altura promedio padres (pulgadas)" = "midparentHeight",
+                 "Numero de hijos hogar" = "childNum")) %>% 
+  set_caption("Altura de hijos en funcion de la altura de padres") %>% 
+  set_caption_pos("top")
+
+
+```
+
+\pagebreak
+
+# Agregar graficos en R Markdown
+
+Al igual que agregamos chunks de codigo que nos permiten procesar datos para imprimir data.frames en formato tabla en R Markdown, podemos hacer exactamente lo mismo con plots en R:
+
+```{r tabla 2, echo = FALSE, message = FALSE, warning = FALSE}
+
+library(ggplot2)
+data(murders)
+
+p <- murders %>% 
+  ggplot(aes(x = population/10^6, y = total, label = abb))
+
+
+p + geom_point(size = 3) +  
+  geom_text(nudge_x = 0.05) + 
+  scale_x_continuous(trans = "log10") +
+  scale_y_continuous(trans = "log10") +
+  xlab("Populations in millions (log scale)") + 
+  ylab("Total number of murders (log scale)") +
+  ggtitle("US Gun Murders in 2010") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+
+```
+
+\pagebreak
+
+# Referencias en R Markdown
+
+Con los elementos que hemos revisado hasta el momento, podemos llevar a cabo de forma simple una sección de referencias al final de nuestros informes. Sin embargo, hay una opción muy útil que les puede ayudar para sus trabajos de grado:
+
+Existen gestores de referencias bibliográficas, tales como [Zotero](https://www.zotero.org/) que nos permiten almacenar todas nuestras referencias en línea o cuyo DOI esté disponible. Esto resulta particularmente útil para trabajos universitarios o trabajos de grado, debido a que haciendo uso de Zotero correctamente, nos permite generar de forma automática la sección de referencias al final de nuestro informe o trabajo. Zotero es compatible con R Markdown, así como es compatible con Microsoft Word y Google Docs.
+
+**Les recomiendo que revisen la herramienta de Zotero para agregar citas a sus trabajos (en particular el TDG).**
+
+Acá también les dejo [un enlace](https://bookdown.org/gboccardo/manual-ED-UCH/introduccion-al-uso-de-rmarkdown-para-la-compilacion-de-resultados-de-rstudio-en-diferentes-formatos.html) de utilidad para saber cómo podemos usar Zotero con R Markdown, que es a través del formato particular de LaTex para bibliografía.
