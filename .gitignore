@@ -10,9 +10,13 @@
 renv/library/
 renv/staging/
 
-# Local-only data
-data/raw/
-data/external/
+# Local-only data and references
+data/**
+!data/
+!data/README.md
+references/**
+!references/
+!references/README.md
 
 # Generated outputs
 outputs/*
