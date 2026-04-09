@@ -10,13 +10,16 @@
 renv/library/
 renv/staging/
 
-# Local-only data and references
+# Local-only data, references, and archives
 data/**
 !data/
 !data/README.md
 references/**
 !references/
 !references/README.md
+legacy/**
+!legacy/
+!legacy/README.md
 
 # Generated outputs
 outputs/*
@@ -25,8 +28,6 @@ outputs/*
 !outputs/figures/.gitkeep
 !outputs/tables/
 !outputs/tables/.gitkeep
-!outputs/rendered-slides/
-!outputs/rendered-slides/.gitkeep
 
 # OS junk
 .DS_Store
