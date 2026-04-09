@@ -1,0 +1,92 @@
+---
+title: "Quarto Guide Preview"
+subtitle: "Reset from zero using the official presentations guide"
+format: revealjs
+---
+
+# Creating Slides
+
+## Basic Slide
+
+This deck uses Quarto's native presentation syntax.
+
+- Slides are created with headings
+- `##` creates regular slides
+- `#` creates section title slides
+
+## Slide Without A Title
+
+---
+
+This slide is separated with a horizontal rule rather than a heading.
+
+# Incremental Lists
+
+## Incremental Example
+
+::: {.incremental}
+- First point appears first
+- Second point appears next
+- Third point appears last
+:::
+
+## Non-Incremental Example
+
+::: {.nonincremental}
+- This list stays visible all at once
+- Even if the presentation uses incremental lists elsewhere
+:::
+
+# Multiple Columns
+
+## Column Layout
+
+:::: {.columns}
+
+::: {.column width="40%"}
+### Left Column
+
+- Short point
+- Short point
+- Short point
+:::
+
+::: {.column width="60%"}
+### Right Column
+
+This is the native Quarto / Revealjs columns syntax from the presentations guide.
+:::
+
+::::
+
+# Speaker Notes
+
+## Slide With Notes
+
+This slide has presenter notes.
+
+::: {.notes}
+Mention how notes are opened in Reveal speaker view.
+:::
+
+# Slide Backgrounds
+
+## Color Background {background-color="seagreen"}
+
+This slide uses a background color attribute.
+
+## Image Background {background-image="../_shared/assets/Logo_UCAB_1.png" background-size="220px" background-repeat="repeat" background-color="white"}
+
+This slide uses a repeated image background.
+
+## {background-color="whitesmoke"}
+
+This is a background-only slide with no title.
+
+# Next Step
+
+## Lecture Template Baseline
+
+The active template is now minimal on purpose.
+
+Start Lecture 01 only after the presentation structure feels right in this preview.

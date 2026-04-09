@@ -1,0 +1,132 @@
+---
+title: "Slide System Preview"
+subtitle: "Locked prototypes before Lecture 01"
+format: revealjs
+---
+
+## Course Slide System {.type-cover .bg-glow}
+
+![](../_shared/assets/Logo_UCAB_1.png){width="120px"}
+
+Placeholder preview deck\
+All slide types are shown with neutral content only.
+
+Giorgio Cunto
+
+## Locked Types {.type-agenda .bg-grid}
+
+- `type-cover`: opening slide
+- `type-agenda`: roadmap or outline
+- `type-divider`: section break
+- `type-message`: one main idea
+- `type-content`: standard lecture content
+- `type-two-column`: side-by-side explanation
+- `type-compare`: contrast or alternatives
+- `type-evidence`: metrics or compact evidence
+- `type-image`: image, chart, or diagram focus
+- `type-quote`: quote or citation slide
+- `type-closing`: closing slide
+
+## Section Divider {.type-divider .bg-split}
+
+[Type 03]{.kicker}
+
+Use this slide to start a new section and reset attention.
+
+## Message Slide {.type-message .bg-glow}
+
+This layout is for one sentence that deserves the whole screen.
+
+## Standard Content {.type-content}
+
+::: card
+### Placeholder Heading
+
+This is the default explanatory slide. Use it for definitions, short examples, process steps, or narrative teaching content.
+:::
+
+## Two Column Slide {.type-two-column}
+
+::::::: columns
+:::: {.column width="50%"}
+::: card
+### Left Block
+
+- Placeholder point one
+- Placeholder point two
+- Placeholder point three
+:::
+::::
+
+:::: {.column width="50%"}
+::: card
+### Right Block
+
+- Placeholder point one
+- Placeholder point two
+- Placeholder point three
+:::
+::::
+:::::::
+
+## Comparison Slide {.type-compare}
+
+::::: compare-grid
+::: card
+### Model A
+
+Short placeholder text for the first side of the comparison.
+:::
+
+::: card
+### Model B
+
+Short placeholder text for the second side of the comparison.
+:::
+:::::
+
+## Evidence Slide {.type-evidence .bg-grid}
+
+[Type 08]{.kicker}
+
+Use this layout when you want three compact numbers or claims to land quickly.
+
+:::::: metric-grid
+::: metric-card
+[24%]{.metric-value} Placeholder evidence label
+:::
+
+::: metric-card
+[3.1x]{.metric-value} Placeholder evidence label
+:::
+
+::: metric-card
+[12]{.metric-value} Placeholder evidence label
+:::
+::::::
+
+## Image Focus Slide {.type-image .bg-split}
+
+::: placeholder-box
+Placeholder frame for one dominant chart, figure, screenshot, or photo.
+:::
+
+## Quote Slide {.type-quote .bg-glow}
+
+> Placeholder quotation or citation block set aside for emphasis.
+
+## Background Rules {.type-content}
+
+::: card
+### Locked Background Modifiers
+
+- `.bg-glow`: soft radial emphasis for cover, message, or quote slides
+- `.bg-grid`: subtle structure for roadmap or evidence slides
+- `.bg-split`: directional band for divider or image-focused slides
+:::
+
+## Closing Slide {.type-closing .bg-split}
+
+Slide system preview complete
+
+The next step is choosing which of these types stay, which are removed, and which need variants.
