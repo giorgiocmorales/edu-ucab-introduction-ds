@@ -3,19 +3,37 @@
 .Rhistory
 .RData
 .Ruserdata
+.quarto/
+.codex_tmp/
 
 # renv
+.renv-local/
 renv/library/
 renv/staging/
 
-# Local-only data and outputs
-data/
-outputs/
-references/pdfs/
+# Local-only data, references, and archives
+data/**
+!data/
+!data/README.md
+references/**
+!references/
+!references/README.md
+legacy/**
+!legacy/
+!legacy/README.md
 
-# Reports build artifacts
-reports/_site/
+# Generated outputs
+outputs/*
+!outputs/.gitkeep
+!outputs/figures/
+!outputs/figures/.gitkeep
+!outputs/tables/
+!outputs/tables/.gitkeep
 
 # OS junk
 .DS_Store
 Thumbs.db
+~$*
+
+/.quarto/
+**/*.quarto_ipynb

@@ -1,0 +1,25 @@
+---
+title: "Session XX"
+subtitle: "Lecture Subtitle"
+format: revealjs
+---
+
+# Section Title
+
+## First Slide
+
+- Main point
+- Supporting point
+- Example or implication
+
+## Two Columns
+
+::::: columns
+::: {.column width="40%"}
+Left column
+:::
+
+::: {.column width="60%"}
+Right column
+:::
+:::::

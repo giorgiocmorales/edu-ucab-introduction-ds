@@ -1,0 +1,14 @@
+author: "Giorgio Cunto"
+format:
+  revealjs:
+    theme: simple
+    smaller: true
+    slide-number: true
+    incremental: false
+    logo: _shared/assets/Logo_UCAB_1.png
+    footer: "Introduction to Data Science"
+execute:
+  echo: true
+  warning: false
+  message: false
+editor: visual
