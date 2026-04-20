@@ -1,0 +1,490 @@
+---
+title: "Lecture 03"
+subtitle: "Combining, Importing, and Cleaning Data"
+format: revealjs
+---
+
+## Main Message {.main-message}
+
+*Real data work rarely starts with one clean table.*
+
+*Before analysis can be trusted, we often need to import files, combine related tables through keys, and clean text values into usable variables.*
+
+# From One Table To Several Tables
+
+## Why this comes after `dplyr`
+
+In Lecture 02, we worked mainly with one tidy data frame at a time.
+
+- `select()` chose columns.
+- `filter()` chose rows.
+- `mutate()` created variables.
+- `summarise()` and `group_by()` produced grouped summaries.
+- `pivot_longer()` and `pivot_wider()` reshaped a table.
+
+Those tools are most useful once the data is already in a workable table.
+
+Many projects start one step earlier: the information is split across files, tables, and text fields that need preparation.
+
+## Three preparation tasks
+
+This lecture adds three common preparation tasks:
+
+1. Combining tables that share a key.
+2. Importing data from external files.
+3. Cleaning imported text values before analysis.
+
+The goal is not to memorize every possible import or cleaning function. The goal is to recognize which operation the data needs.
+
+```{r}
+#| include: false
+library(tidyverse)
+library(dslabs)
+
+data(murders)
+```
+
+## A key is how tables recognize each other
+
+A *key* is a variable that identifies matching observations across tables.
+
+In this example, both tables describe U.S. states. The `state` column is the key we can use to connect them.
+
+::: fragment
+```{r}
+# Inspect the analysis table
+murders %>%
+  select(state, region, population, total) %>%
+  head()
+```
+:::
+
+::: fragment
+```{r}
+# Inspect the lookup table
+results_us_election_2016 %>%
+  select(state, electoral_votes) %>%
+  head()
+```
+:::
+
+## Row position is not a key
+
+Two tables can contain the same kind of observation without storing rows in the same order.
+
+::: fragment
+```{r}
+# Check whether state names appear in the same row order
+identical(murders$state, results_us_election_2016$state)
+```
+:::
+
+`FALSE` means we should not paste these columns together by position. We need a join that matches rows using `state`.
+
+## Intervention Space {.intervention-slide}
+
+Question to ponder.
+
+::: fragment
+- If two tables both have a `state` column, what should we check before joining?
+:::
+
+::: fragment
+- *Answer:* Check that the columns have the same meaning, compatible values, and the expected level of uniqueness. Same name alone is not enough.
+:::
+
+# Joins
+
+## `left_join()` adds columns by matching keys
+
+`left_join()` keeps all rows from the first table and adds matching columns from the second table.
+
+::: fragment
+```{r}
+# Add electoral votes to the murders table
+murders_election <- murders %>%
+  left_join(results_us_election_2016, by = "state")
+```
+:::
+
+::: fragment
+```{r}
+# Keep only a few columns for inspection
+murders_election %>%
+  select(state, population, total, electoral_votes) %>%
+  head()
+```
+:::
+
+## A small join example
+
+The differences among joins are easier to see with smaller tables.
+
+::: fragment
+```{r}
+# Main table
+tab1 <- murders %>%
+  slice(1:6) %>%
+  select(state, population)
+
+tab1
+```
+:::
+
+::: fragment
+```{r}
+# Lookup table with only some matching states
+tab2 <- results_us_election_2016 %>%
+  slice(c(1:3, 5, 14, 44)) %>%
+  select(state, electoral_votes)
+
+tab2
+```
+:::
+
+## Four mutating joins
+
+Mutating joins add columns. They differ in which rows they keep.
+
+::: fragment
+```{r}
+# Keep every row from tab1
+left_join(tab1, tab2, by = "state")
+```
+:::
+
+::: fragment
+```{r}
+# Keep every row from tab2
+right_join(tab1, tab2, by = "state")
+```
+:::
+
+## Four mutating joins
+
+The other two common mutating joins keep only matches or keep everything.
+
+::: fragment
+```{r}
+# Keep only states that appear in both tables
+inner_join(tab1, tab2, by = "state")
+```
+:::
+
+::: fragment
+```{r}
+# Keep states from either table
+full_join(tab1, tab2, by = "state")
+```
+:::
+
+## Filtering joins
+
+Filtering joins use another table to decide which rows to keep. They do not add columns.
+
+::: fragment
+```{r}
+# Rows in tab1 that have a match in tab2
+semi_join(tab1, tab2, by = "state")
+```
+:::
+
+::: fragment
+```{r}
+# Rows in tab1 that do not have a match in tab2
+anti_join(tab1, tab2, by = "state")
+```
+:::
+
+## Intervention Space {.intervention-slide}
+
+Question to ponder.
+
+::: fragment
+- Which join would you use if you want every row from your main dataset, plus whatever matches from a lookup table?
+:::
+
+::: fragment
+- *Answer:* Use `left_join()` with the main dataset on the left.
+:::
+
+# Binding And Set Operations
+
+## Binds do not match by key
+
+Binding combines objects by position or compatible structure. It does not search for matching key values.
+
+::: fragment
+```{r}
+# Bind vectors as columns
+bind_cols(a = 1:3, b = 4:6)
+```
+:::
+
+::: fragment
+```{r}
+# Bind data frames as rows
+bind_rows(
+  tibble(state = c("Alabama", "Alaska"), group = "first"),
+  tibble(state = c("Arizona", "Arkansas"), group = "second")
+)
+```
+:::
+
+## Joins versus binds
+
+Use a join when the question is:
+
+- Which rows in table A match rows in table B?
+- Which columns should be added based on a key?
+- Which rows have no match?
+
+Use a bind when the question is:
+
+- Can these rows be stacked because they have compatible columns?
+- Can these columns be placed side by side because the row order already means something?
+
+When in doubt, look for the key first.
+
+## Set operations compare membership
+
+Set operations ask what values or rows are shared, combined, or different.
+
+::: fragment
+```{r}
+# Values in both vectors
+intersect(1:10, 6:15)
+```
+:::
+
+::: fragment
+```{r}
+# Values in the first vector but not the second
+setdiff(1:10, 6:15)
+```
+:::
+
+::: fragment
+```{r}
+# Same values, different order
+setequal(1:5, 5:1)
+identical(1:5, 5:1)
+```
+:::
+
+# Importing Files
+
+## Scripts should remember how data arrived
+
+Using built-in datasets is useful for learning, but most projects start with files.
+
+A reproducible import records:
+
+- where the file came from;
+- which function read it;
+- which options were used;
+- which object stores the result.
+
+Point-and-click importing can help explore a file, but the final workflow should live in a script.
+
+## Reading a CSV
+
+The `dslabs` package includes a CSV version of the `murders` data. We can locate it without copying it into the project folder.
+
+::: fragment
+```{r}
+# Build a reproducible path to a package file
+csv_path <- system.file("extdata", "murders.csv", package = "dslabs")
+
+csv_path
+```
+:::
+
+::: fragment
+```{r}
+# Read the CSV into R
+imported_murders <- read_csv(csv_path, show_col_types = FALSE)
+
+imported_murders %>%
+  select(state, population, total) %>%
+  head()
+```
+:::
+
+## Inspect imported types
+
+After import, always check whether R interpreted the variables as expected.
+
+::: fragment
+```{r}
+# Compare a few imported column classes
+imported_murders %>%
+  select(state, population, total) %>%
+  summarise(across(everything(), ~ class(.x)[1]))
+```
+:::
+
+This habit matters because imported numbers, dates, and categories often arrive as text.
+
+## Intervention Space {.intervention-slide}
+
+Question to ponder.
+
+::: fragment
+- Why is a written import command more reproducible than clicking the RStudio Import button?
+:::
+
+::: fragment
+- *Answer:* The command preserves the path, function, arguments, and object name. Someone else can rerun it later and see exactly how the data entered R.
+:::
+
+# Cleaning Imported Text
+
+## Imported values can look numeric but behave like text
+
+Some values arrive with commas, labels, percent signs, or other characters.
+
+::: fragment
+```{r}
+# A small example that mimics imported text
+messy_counts <- tibble(
+  state = c("California", "Texas", "Florida"),
+  population_text = c("37,253,956 people", "25,145,561 people", "18,801,310 people"),
+  murders_text = c("1,257", "805", "987")
+)
+
+messy_counts
+```
+:::
+
+::: fragment
+```{r}
+# The population column is text, not numeric
+class(messy_counts$population_text)
+```
+:::
+
+## Detect the pattern
+
+`str_detect()` checks whether a character vector contains a pattern.
+
+::: fragment
+```{r}
+# Which population values contain commas?
+str_detect(messy_counts$population_text, ",")
+```
+:::
+
+::: fragment
+```{r}
+# Do any values contain commas?
+any(str_detect(messy_counts$population_text, ","))
+```
+:::
+
+## Replace or parse
+
+`str_replace_all()` changes matching text. `parse_number()` extracts numeric content from text.
+
+::: fragment
+```{r}
+# Remove commas but keep the rest of the text
+messy_counts %>%
+  mutate(population_no_commas = str_replace_all(population_text, ",", ""))
+```
+:::
+
+::: fragment
+```{r}
+# Extract usable numbers
+clean_counts <- messy_counts %>%
+  mutate(population = parse_number(population_text),
+         total = parse_number(murders_text))
+
+clean_counts
+```
+:::
+
+## Confirm the cleaned type
+
+Cleaning is not complete until we check the result.
+
+::: fragment
+```{r}
+# The cleaned population is numeric
+class(clean_counts$population)
+```
+:::
+
+::: fragment
+```{r}
+# Now we can compute a rate
+clean_counts %>%
+  mutate(rate = total / population * 100000) %>%
+  select(state, rate)
+```
+:::
+
+## Cleaning can also fix keys
+
+Text cleaning is useful before joins when keys are written in different cases.
+
+::: fragment
+```{r}
+# A lookup table with lower-case state names
+region_lookup <- tibble(
+  state = c("california", "texas", "florida"),
+  short_region = c("West", "South", "South")
+)
+```
+:::
+
+::: fragment
+```{r}
+# Standardize the key before joining
+region_lookup %>%
+  mutate(state = str_to_title(state)) %>%
+  left_join(clean_counts, by = "state")
+```
+:::
+
+## Intervention Space {.intervention-slide}
+
+Question to ponder.
+
+::: fragment
+- Why can `as.numeric("1,234")` produce `NA`, while `parse_number("1,234")` returns `1234`?
+:::
+
+::: fragment
+- *Answer:* `as.numeric()` expects a clean numeric string. `parse_number()` is designed for imported text and extracts the numeric part before converting it.
+:::
+
+# Practice
+
+## Join, import, clean
+
+Use the tools together:
+
+1. Import a CSV into R.
+2. Inspect the column types.
+3. Clean any text values that should become numbers.
+4. Join a lookup table when extra columns are needed.
+5. Compute a summary only after the structure and types make sense.
+
+::: fragment
+```{r}
+# A compact example using the cleaned toy table
+clean_counts %>%
+  mutate(rate = total / population * 100000) %>%
+  left_join(region_lookup %>% mutate(state = str_to_title(state)), by = "state") %>%
+  group_by(short_region) %>%
+  summarise(avg_rate = mean(rate), .groups = "drop")
+```
+:::
+
+## Main Message {.main-message}
+
+*Real data work rarely starts with one clean table.*
+
+*The practical workflow is: import the data, combine related tables through keys, clean values that arrived as text, and only then summarize or analyze.*
