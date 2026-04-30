@@ -21,13 +21,28 @@ imported_murders %>%
   select(state, population, total) %>%
   head()
 
-# Compare a few imported column classes
-imported_murders %>%
-  select(state, population, total) %>%
-  summarise(across(everything(), ~ class(.x)[1]))
+# Compare a few imported column classes one at a time
+class(imported_murders$state)
+class(imported_murders$population)
+class(imported_murders$total)
+
+
+# BASE R IMPORT OPTIONS ---------------------------------------------------
+
+# Base R CSV import
+base_murders <- read.csv(csv_path)
+
+head(base_murders)
+
+# Force every imported column to arrive as text
+base_murders_text <- read.csv(csv_path, colClasses = "character")
+
+str(base_murders_text)
 
 
 # MESSY TEXT VALUES -------------------------------------------------------
+
+# tibble() creates a tidyverse data frame.
 
 # A small example that mimics imported text
 messy_counts <- tibble(
@@ -50,6 +65,18 @@ str_detect(messy_counts$population_text, ",")
 # Do any values contain commas?
 any(str_detect(messy_counts$population_text, ","))
 
+# Do all values contain commas?
+all(str_detect(messy_counts$population_text, ","))
+
+
+# FIRST MATCH VERSUS EVERY MATCH -----------------------------------------
+
+# One value has two commas
+many_commas <- "37,253,956 people"
+
+str_replace(many_commas, ",", "")
+str_replace_all(many_commas, ",", "")
+
 
 # REPLACE OR PARSE --------------------------------------------------------
 
@@ -64,6 +91,17 @@ clean_counts <- messy_counts %>%
 
 clean_counts
 
+
+# PARSE SEVERAL COLUMNS ---------------------------------------------------
+
+# Apply parse_number() to several text columns
+messy_counts %>%
+  mutate(across(
+    .cols = c(population_text, murders_text),
+    .fns = parse_number,
+    .names = "{.col}_number"
+  ))
+
 # The cleaned population is numeric
 class(clean_counts$population)
 
@@ -73,7 +111,23 @@ clean_counts %>%
   select(state, rate)
 
 
+# CASE FUNCTIONS ----------------------------------------------------------
+
+# Compare common case transformations
+case_examples <- tibble(
+  state = c("california", "TEXAS", "new york")
+)
+
+case_examples %>%
+  mutate(lower = str_to_lower(state),
+         upper = str_to_upper(state),
+         title = str_to_title(state),
+         sentence = str_to_sentence(state))
+
+
 # CLEAN KEYS BEFORE JOINING -----------------------------------------------
+
+# str_to_title() converts text to title case so key values can match.
 
 # A lookup table with lower-case state names
 region_lookup <- tibble(
@@ -85,6 +139,19 @@ region_lookup <- tibble(
 region_lookup %>%
   mutate(state = str_to_title(state)) %>%
   left_join(clean_counts, by = "state")
+
+
+# SIMPLE REGULAR EXPRESSIONS ----------------------------------------------
+
+# Does the entry contain a unit?
+height_entries <- c("180 cm", "70 inches", "180", "70''")
+str_detect(height_entries, "cm|inches")
+
+# Does the entry contain digits or letters?
+mixed_entries <- c("5", "6", "5'10", "5 feet", "Five", "")
+
+str_detect(mixed_entries, "\\d")
+str_detect(mixed_entries, "[a-zA-Z]")
 
 
 # PRACTICE PIPELINE -------------------------------------------------------

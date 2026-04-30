@@ -22,7 +22,7 @@ teaching assets.
 - `lectures/`: canonical lecture workspace.
 - `lectures/_metadata.yml`: shared Quarto revealjs defaults.
 - `lectures/_format/`: locked shared slide format, including theme files,
-  background logic, reusable logos, and backgrounds.
+  background logic, reusable logos, and visual assets.
 - `lectures/_templates/`: starter templates for lecture decks and handouts.
 - `problem-sets/`: problem-set source files and problem-set templates.
 - `scripts/`: reusable automation for setup, rendering, and export.
@@ -30,8 +30,9 @@ teaching assets.
 - `references/`: local reference books, PDFs, and adaptation notes.
 - `legacy/`: archived material from previous course versions and discarded
   presentation experiments.
-- `outputs/`: generated render artifacts, figures, and tables.
-- `plans/`: active and archived repo maintenance plans.
+- `outputs/`: generated render artifacts, including rendered slides and
+  generated problem-set exports.
+- `plans/`: repo maintenance plans, with old plans under `plans/archived/`.
 - `.agents/`: local agent skills and workflow notes.
 - `AGENTS.md`: repo-wide operating contract for coding agents.
 
@@ -60,6 +61,13 @@ quarto render lectures/02-data-wrangling-dplyr/slides.qmd
 
 Future decks should start from `lectures/_templates/lecture-slides.qmd`.
 
+To clear local generated folders that make the workspace look deeper than the
+source tree, run:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/clean_generated.ps1
+```
+
 Student-share convention:
 
 - keep the normal Quarto render as `slides.html`
@@ -71,18 +79,23 @@ Student-share convention:
 
 ## Problem Sets
 
-Problem sets live in `problem-sets/`. Shared starter files belong in
-`problem-sets/_templates/`, and individual problem sets should use a numbered
-folder such as:
+Problem-set source lives in `problem-sets/`. Shared starter files belong in
+`problem-sets/_templates/`, and individual source folders should use numbered
+names such as:
 
 ```text
 problem-sets/01-r-basics/
-  problem-set.qmd
-  assets/
+  README.md
+  student-facing.md
+  01-r-basics-review.R
 ```
 
-Use script-based templates only when the assignment is meant to be completed as
-an R script rather than a rendered document.
+Problem sets should be consolidated in a format that can be copied into Canvas
+with minimal cleanup. Elaborate coding problems should also have corresponding
+R review scripts so expected answers can be reproduced.
+
+Canvas-ready and instructor-only generated outputs belong under
+`outputs/problem-sets/` and should not be committed unless explicitly requested.
 
 ## Machine Setup
 

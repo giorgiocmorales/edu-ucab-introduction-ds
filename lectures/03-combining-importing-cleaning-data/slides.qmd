@@ -26,15 +26,11 @@ Those tools are most useful once the data is already in a workable table.
 
 Many projects start one step earlier: the information is split across files, tables, and text fields that need preparation.
 
-## Three preparation tasks
+Expanding on the tidy data principles, today's lecture covers three common operations:
 
-This lecture adds three common preparation tasks:
-
-1. Combining tables that share a key.
-2. Importing data from external files.
-3. Cleaning imported text values before analysis.
-
-The goal is not to memorize every possible import or cleaning function. The goal is to recognize which operation the data needs.
+1.  Combining tables that share a key.
+2.  Importing data from external files.
+3.  Cleaning imported text values before analysis.
 
 ```{r}
 #| include: false
@@ -47,6 +43,30 @@ data(murders)
 ## A key is how tables recognize each other
 
 A *key* is a variable that identifies matching observations across tables.
+
+The key tells R which row in one table belongs with which row in another table.
+
+A useful key has three properties:
+
+- It has the same meaning in both tables.
+- Its values are written in compatible formats.
+- Its uniqueness matches the join you intend to make.
+
+The common variable *must* have the same column name and at least some shared values in common at the column/row level for the joins to be generated.
+
+Operationally speaking, joins "flip" the tables to match rows based on the key, and then combine columns from both tables.
+
+::::: columns
+::: {.column width="50%"}
+![](assets/w_setup.png){width="35%" fig-alt="Two small tables named x and y with colored key values that can be used for matching rows."}
+:::
+
+::: {.column width="50%"}
+![](assets/w_setup2.png){width="35%" fig-alt="Two small tables arranged on perpendicular axes with colored key values showing possible row matches."}
+:::
+:::::
+
+## The same idea with course data
 
 In this example, both tables describe U.S. states. The `state` column is the key we can use to connect them.
 
@@ -72,6 +92,10 @@ results_us_election_2016 %>%
 
 Two tables can contain the same kind of observation without storing rows in the same order.
 
+A key is different from row position. A row number only tells us where a value happens to appear in the file. A key tells us what observation the row represents.
+
+`identical()` checks whether two R objects are exactly the same. Here, we use it to ask whether the state names appear in the same order in both tables.
+
 ::: fragment
 ```{r}
 # Check whether state names appear in the same row order
@@ -80,6 +104,24 @@ identical(murders$state, results_us_election_2016$state)
 :::
 
 `FALSE` means we should not paste these columns together by position. We need a join that matches rows using `state`.
+
+## Key matches can create more than one row
+
+::::: columns
+::: {.column width="48%"}
+Before joining, check whether the key behaves the way you expect.
+
+- A key can match one row.
+- A key can match no rows.
+- A key can match more than one row.
+
+The last case is not always wrong, but it changes the number of rows in the result.
+:::
+
+::: {.column width="52%"}
+![](assets/w_match-types.png){width="100%" fig-alt="Diagram showing one key value in the left table matching multiple rows in the right table and creating repeated rows in the joined output."}
+:::
+:::::
 
 ## Intervention Space {.intervention-slide}
 
@@ -95,8 +137,40 @@ Question to ponder.
 
 # Joins
 
+## Common join types
+
+::::: columns
+::: {.column width="50%"}
+The main join functions differ in which rows they keep and whether they add columns.
+
+Mutating joins add columns by matching keys.
+
+- `left_join()` keeps all rows from the left table.
+- `right_join()` keeps all rows from the right table.
+- `inner_join()` keeps only matching rows.
+- `full_join()` keeps rows from either table.
+
+Filtering joins keep or drop rows based on matches but do not add columns.
+
+- `semi_join()` keeps matching left rows without adding columns.
+- `anti_join()` keeps nonmatching left rows without adding columns.
+
+Depending on the order in which we specify the join objects within the functions, we will have a left or right join to the first and second object.
+:::
+
+::: {.column width="50%"}
+![](assets/07-dplyr_joins.svg){width="58%" fig-alt="Summary diagram showing the rows retained by left, right, inner, full, semi, and anti joins."}
+:::
+:::::
+
 ## `left_join()` adds columns by matching keys
 
+::::::: columns
+::: {.column width="44%"}
+![](assets/w_left.png){width="100%" fig-alt="Diagram of a left join where all rows from the left table are kept and unmatched right-side values become NA."}
+:::
+
+::::: {.column width="56%"}
 `left_join()` keeps all rows from the first table and adds matching columns from the second table.
 
 ::: fragment
@@ -115,11 +189,19 @@ murders_election %>%
   head()
 ```
 :::
+:::::
+:::::::
 
 ## A small join example
 
 The differences among joins are easier to see with smaller tables.
 
+We'll create `tab1` and `tab2` with only a few rows and columns, and then apply each join type to them.
+
+`slice()` selects rows by position. Here, it lets us keep a small, controlled set of rows for the example.
+
+::::::: columns
+:::: {.column width="50%"}
 ::: fragment
 ```{r}
 # Main table
@@ -130,7 +212,9 @@ tab1 <- murders %>%
 tab1
 ```
 :::
+::::
 
+:::: {.column width="50%"}
 ::: fragment
 ```{r}
 # Lookup table with only some matching states
@@ -141,10 +225,18 @@ tab2 <- results_us_election_2016 %>%
 tab2
 ```
 :::
+::::
+:::::::
 
-## Four mutating joins
+## `left_join()` keeps left-table rows
 
-Mutating joins add columns. They differ in which rows they keep.
+:::::: columns
+::: {.column width="44%"}
+![](assets/w_left.png){width="100%" fig-alt="Diagram of a left join retaining all rows from the left table and filling unmatched right values with NA."}
+:::
+
+:::: {.column width="56%"}
+`left_join()` is the usual choice when `tab1` is the main table and `tab2` is a lookup table. It keeps all the columns and observations from `tab1` and adds matching columns from `tab2`. Unmatched values become `NA`.
 
 ::: fragment
 ```{r}
@@ -152,6 +244,18 @@ Mutating joins add columns. They differ in which rows they keep.
 left_join(tab1, tab2, by = "state")
 ```
 :::
+::::
+::::::
+
+## `right_join()` keeps right-table rows
+
+:::::: columns
+::: {.column width="44%"}
+![](assets/w_right.png){width="100%" fig-alt="Diagram of a right join retaining all rows from the right table and filling unmatched left values with NA."}
+:::
+
+:::: {.column width="56%"}
+`right_join()` is the mirror image of `left_join()`. It keeps all the columns and rows of the second table and adds matching columns from the first table. Unmatched values become `NA`.
 
 ::: fragment
 ```{r}
@@ -159,10 +263,18 @@ left_join(tab1, tab2, by = "state")
 right_join(tab1, tab2, by = "state")
 ```
 :::
+::::
+::::::
 
-## Four mutating joins
+## `inner_join()` keeps only matches
 
-The other two common mutating joins keep only matches or keep everything.
+:::::: columns
+::: {.column width="44%"}
+![](assets/w_inner.png){width="100%" fig-alt="Diagram of an inner join retaining only rows whose keys appear in both tables."}
+:::
+
+:::: {.column width="56%"}
+`inner_join()` drops rows that do not have a match in both tables. It keeps only the observations/rows that appear in both tables.
 
 ::: fragment
 ```{r}
@@ -170,6 +282,18 @@ The other two common mutating joins keep only matches or keep everything.
 inner_join(tab1, tab2, by = "state")
 ```
 :::
+::::
+::::::
+
+## `full_join()` keeps rows from either table
+
+:::::: columns
+::: {.column width="44%"}
+![](assets/w_full.png){width="100%" fig-alt="Diagram of a full join retaining all rows from both tables and filling unmatched values with NA."}
+:::
+
+:::: {.column width="56%"}
+`full_join()` keeps all key values from both tables. Unmatched values become `NA`.
 
 ::: fragment
 ```{r}
@@ -177,10 +301,20 @@ inner_join(tab1, tab2, by = "state")
 full_join(tab1, tab2, by = "state")
 ```
 :::
+::::
+::::::
 
-## Filtering joins
+## `semi_join()` keeps matching left rows
 
+:::::: columns
+::: {.column width="44%"}
+![](assets/w_semi.png){width="100%" fig-alt="Diagram of a semi join retaining rows from the left table whose keys have matches in the right table without adding right-table columns."}
+:::
+
+:::: {.column width="56%"}
 Filtering joins use another table to decide which rows to keep. They do not add columns.
+
+`semi_join()` keeps rows from the first table that have a match in the second table. It returns all rows and observations from the first object that ARE present in the second object, but it does not add any columns from the second object.
 
 ::: fragment
 ```{r}
@@ -188,6 +322,18 @@ Filtering joins use another table to decide which rows to keep. They do not add 
 semi_join(tab1, tab2, by = "state")
 ```
 :::
+::::
+::::::
+
+## `anti_join()` keeps nonmatching left rows
+
+:::::: columns
+::: {.column width="44%"}
+![](assets/w_anti.png){width="100%" fig-alt="Diagram of an anti join retaining rows from the left table whose keys do not have matches in the right table."}
+:::
+
+:::: {.column width="56%"}
+`anti_join()` is useful for checking which observations do not match a lookup table. It returns all rows and observations from the first object that are NOT present in the second object, without adding any columns from the second object.
 
 ::: fragment
 ```{r}
@@ -195,6 +341,38 @@ semi_join(tab1, tab2, by = "state")
 anti_join(tab1, tab2, by = "state")
 ```
 :::
+::::
+::::::
+
+## `join_by()` writes the matching rule
+
+`join_by()` is the modern dplyr way to describe how rows should match.
+
+- `by = "state"` is a shortcut for matching a column with the same name.
+- `by = join_by(state)` writes that same equality rule explicitly.
+- `by = join_by(x == y)` is useful when the key columns have different names.
+
+::: fragment
+```{r}
+# Same result as by = "state", but the matching rule is explicit
+left_join(tab1, tab2, by = join_by(state))
+```
+:::
+
+![](assets/w_join_by3.png){width="16%" fig-alt="Diagram of an equality join where one key value creates more than one output row."}
+
+## `join_by()` can express special matches
+
+These patterns are useful to recognize, but they are beyond today's required code examples.
+
+- `join_by(x < y)`, `join_by(x <= y)`, `join_by(x > y)`, and `join_by(x >= y)` join rows using inequalities.
+- `join_by(closest(x >= y))` is a rolling or closest-match join condition.
+- `join_by(between(x, lower, upper))` matches when one value falls inside an interval.
+- `join_by(within(x_lower, x_upper, y_lower, y_upper))` matches contained intervals.
+- `join_by(overlaps(x_lower, x_upper, y_lower, y_upper))` matches overlapping intervals.
+- `cross_join()` returns every combination of rows from the two tables.
+
+![](assets/w_join_by2.png){width="12%" fig-alt="Diagram of an inequality join using a less-than key condition."} ![](assets/w_join_by4.png){width="18%" fig-alt="Diagram of an inequality join using a greater-than-or-equal key condition."} ![](assets/w_join_by5.png){width="18%" fig-alt="Diagram of a closest-match rolling join."} ![](assets/w_join_by1.png){width="13%" fig-alt="Diagram of a cross join where every row in one table matches every row in another table."}
 
 ## Intervention Space {.intervention-slide}
 
@@ -212,7 +390,9 @@ Question to ponder.
 
 ## Binds do not match by key
 
-Binding combines objects by position or compatible structure. It does not search for matching key values.
+Binding combines objects by position or compatible structure. It does not search for matching key values. `bind_cols()` and `cbind()` will place columns side by side, while `bind_rows()` and `rbind()` will stack rows on top of each other.
+
+`tibble()` creates a tidyverse data frame. We use it here to build small example tables directly in code.
 
 ::: fragment
 ```{r}
@@ -248,7 +428,11 @@ When in doubt, look for the key first.
 
 ## Set operations compare membership
 
+::::::::: columns
+::::: {.column width="50%"}
 Set operations ask what values or rows are shared, combined, or different.
+
+`intersect()` returns values that appear in both inputs. It identifies the intersection between two vectors or elements.
 
 ::: fragment
 ```{r}
@@ -257,12 +441,30 @@ intersect(1:10, 6:15)
 ```
 :::
 
+`union()` returns values that appear in either input, without duplicates. It identifies the union of two vectors or elements.
+
+::: fragment
+```{r}
+# Values in either vector
+union(1:10, 6:15)
+```
+:::
+:::::
+
+::::: {.column width="50%"}
+`setdiff()` returns values in the first input that do not appear in the second. It identifies the difference between two vectors or elements. This difference is not symmetric: `setdiff(x, y)` is not the same as `setdiff(y, x)`.
+
 ::: fragment
 ```{r}
 # Values in the first vector but not the second
 setdiff(1:10, 6:15)
+
+# Other way around
+setdiff(6:15, 1:10) 
 ```
 :::
+
+`setequal()` checks whether two inputs contain the same values. `identical()` is stricter because it also checks order and other object details.
 
 ::: fragment
 ```{r}
@@ -271,6 +473,8 @@ setequal(1:5, 5:1)
 identical(1:5, 5:1)
 ```
 :::
+:::::
+:::::::::
 
 # Importing Files
 
@@ -280,10 +484,10 @@ Using built-in datasets is useful for learning, but most projects start with fil
 
 A reproducible import records:
 
-- where the file came from;
-- which function read it;
-- which options were used;
-- which object stores the result.
+- Where the file came from;
+- Which function read it;
+- Which options were used;
+- Which object stores the result.
 
 Point-and-click importing can help explore a file, but the final workflow should live in a script.
 
@@ -317,14 +521,50 @@ After import, always check whether R interpreted the variables as expected.
 
 ::: fragment
 ```{r}
-# Compare a few imported column classes
-imported_murders %>%
-  select(state, population, total) %>%
-  summarise(across(everything(), ~ class(.x)[1]))
+# Compare a few imported column classes one at a time
+class(imported_murders$state)
+class(imported_murders$population)
+class(imported_murders$total)
 ```
 :::
 
 This habit matters because imported numbers, dates, and categories often arrive as text.
+
+## Base R import options still matter
+
+The tidyverse reader `read_csv()` is useful, but you will also see base R import code in older scripts.
+
+`read.csv()` reads a CSV file into a data frame. The `colClasses` argument can force columns to be imported as a specific type when you need to inspect or clean them manually.
+
+::: fragment
+```{r}
+# Base R CSV import
+base_murders <- read.csv(csv_path)
+
+head(base_murders)
+```
+:::
+
+::: fragment
+```{r}
+# Force every imported column to arrive as text
+base_murders_text <- read.csv(csv_path, colClasses = "character")
+
+str(base_murders_text)
+```
+:::
+
+## Other import functions to recognize
+
+Use the import function that matches the file and the structure of the data.
+
+- `read_csv()` reads comma-separated files.
+- `read_csv2()` reads semicolon-separated CSV files common in some locales.
+- `read_tsv()` reads tab-separated files.
+- `read_delim()` reads delimited files when you need to name the delimiter.
+- `read_excel()` reads Excel workbooks when the `readxl` package is available.
+- For Excel files, check the sheet, skipped rows, header row, cell ranges, merged cells, dates, and imported column types.
+- For special formats, packages such as `haven` and `jsonlite` provide file-specific readers.
 
 ## Intervention Space {.intervention-slide}
 
@@ -343,6 +583,8 @@ Question to ponder.
 ## Imported values can look numeric but behave like text
 
 Some values arrive with commas, labels, percent signs, or other characters.
+
+This example uses `tibble()` to build a small tidyverse data frame that mimics an imported file.
 
 ::: fragment
 ```{r}
@@ -368,6 +610,8 @@ class(messy_counts$population_text)
 
 `str_detect()` checks whether a character vector contains a pattern.
 
+Because stringr functions are vectorized, the check is applied to each value in the vector.
+
 ::: fragment
 ```{r}
 # Which population values contain commas?
@@ -379,6 +623,25 @@ str_detect(messy_counts$population_text, ",")
 ```{r}
 # Do any values contain commas?
 any(str_detect(messy_counts$population_text, ","))
+
+# Do all values contain commas?
+all(str_detect(messy_counts$population_text, ","))
+```
+:::
+
+## Replace the first match or every match
+
+`str_replace()` changes the first match in each string. `str_replace_all()` changes every match in each string.
+
+This difference matters when a value has more than one thousands separator.
+
+::: fragment
+```{r}
+# One value has two commas
+many_commas <- "37,253,956 people"
+
+str_replace(many_commas, ",", "")
+str_replace_all(many_commas, ",", "")
 ```
 :::
 
@@ -405,6 +668,24 @@ clean_counts
 ```
 :::
 
+## Parse several text columns at once
+
+`across()` applies the same function to several columns inside `mutate()`.
+
+Here, the same parsing rule can clean both the population and total-murders text columns.
+
+::: fragment
+```{r}
+# Apply parse_number() to several text columns
+messy_counts %>%
+  mutate(across(
+    .cols = c(population_text, murders_text),
+    .fns = parse_number,
+    .names = "{.col}_number"
+  ))
+```
+:::
+
 ## Confirm the cleaned type
 
 Cleaning is not complete until we check the result.
@@ -425,9 +706,32 @@ clean_counts %>%
 ```
 :::
 
+## Case functions standardize labels
+
+Case differences are ordinary text differences. `"texas"` and `"Texas"` are not identical strings.
+
+The main case helpers are useful for labels and keys:
+
+::: fragment
+```{r}
+# Compare common case transformations
+case_examples <- tibble(
+  state = c("california", "TEXAS", "new york")
+)
+
+case_examples %>%
+  mutate(lower = str_to_lower(state),
+         upper = str_to_upper(state),
+         title = str_to_title(state),
+         sentence = str_to_sentence(state))
+```
+:::
+
 ## Cleaning can also fix keys
 
 Text cleaning is useful before joins when keys are written in different cases.
+
+`str_to_title()` converts text to title case, so `"california"` becomes `"California"`. That makes the key values compatible before the join.
 
 ::: fragment
 ```{r}
@@ -448,6 +752,34 @@ region_lookup %>%
 ```
 :::
 
+## Regular expressions describe patterns
+
+A regular expression is a compact way to describe a text pattern.
+
+For today, recognize three simple ideas:
+
+- `|` means "or".
+- `\\d` means "any digit".
+- `[a-zA-Z]` means "any letter".
+
+::: fragment
+```{r}
+# Does the entry contain a unit?
+height_entries <- c("180 cm", "70 inches", "180", "70''")
+str_detect(height_entries, "cm|inches")
+```
+:::
+
+::: fragment
+```{r}
+# Does the entry contain digits or letters?
+mixed_entries <- c("5", "6", "5'10", "5 feet", "Five", "")
+
+str_detect(mixed_entries, "\\d")
+str_detect(mixed_entries, "[a-zA-Z]")
+```
+:::
+
 ## Intervention Space {.intervention-slide}
 
 Question to ponder.
@@ -460,17 +792,11 @@ Question to ponder.
 - *Answer:* `as.numeric()` expects a clean numeric string. `parse_number()` is designed for imported text and extracts the numeric part before converting it.
 :::
 
-# Practice
+## Intervention Space {.intervention-slide}
 
-## Join, import, clean
+Question to ponder.
 
-Use the tools together:
-
-1. Import a CSV into R.
-2. Inspect the column types.
-3. Clean any text values that should become numbers.
-4. Join a lookup table when extra columns are needed.
-5. Compute a summary only after the structure and types make sense.
+What is each step of this pipeline doing, and why does the order matter?
 
 ::: fragment
 ```{r}
@@ -481,6 +807,15 @@ clean_counts %>%
   group_by(short_region) %>%
   summarise(avg_rate = mean(rate), .groups = "drop")
 ```
+:::
+
+::: fragment
+- `mutate()` computes a rate after the numeric columns have been cleaned.
+- `left_join()` adds region information while keeping every row from the main table.
+- The nested `mutate()` standardizes the lookup-table key before the join.
+- `group_by()` defines the region groups.
+- `summarise()` computes one average rate per group and drops the grouping metadata.
+- The order matters because grouping and summarizing should happen only after the variables and keys are usable.
 :::
 
 ## Main Message {.main-message}

@@ -20,10 +20,6 @@ legacy/**
 # Generated outputs
 outputs/*
 !outputs/.gitkeep
-!outputs/figures/
-!outputs/figures/.gitkeep
-!outputs/tables/
-!outputs/tables/.gitkeep
 
 # OS junk
 .DS_Store

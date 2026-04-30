@@ -39,6 +39,7 @@ finally {
 
 $outputDir = Join-Path $repoRoot "outputs\rendered-slides\lectures\$lectureName"
 $slidesHtml = Join-Path $outputDir "slides.html"
+$htmlOutput = Join-Path $outputDir ("lecture-{0}-slides.html" -f $lectureNumber)
 $pdfOutput = Join-Path $outputDir ("lecture-{0}-slides.pdf" -f $lectureNumber)
 $exportStartedAt = Get-Date
 
@@ -47,11 +48,12 @@ if (-not (Test-Path $slidesHtml)) {
 }
 
 $null = New-Item -ItemType Directory -Path $outputDir -Force
+Copy-Item -LiteralPath $slidesHtml -Destination $htmlOutput -Force
 if (Test-Path $pdfOutput) {
   Remove-Item -LiteralPath $pdfOutput -Force
 }
 
-$fileUrl = "file:///" + ($slidesHtml.Replace('\', '/')) + "?print-pdf"
+$fileUrl = "file:///" + ($htmlOutput.Replace('\', '/')) + "?print-pdf"
 
 & $edgePath `
   --headless `
@@ -63,7 +65,7 @@ $fileUrl = "file:///" + ($slidesHtml.Replace('\', '/')) + "?print-pdf"
   --print-to-pdf-no-header `
   $fileUrl
 
-for ($i = 0; $i -lt 30 -and -not (Test-Path $pdfOutput); $i++) {
+for ($i = 0; $i -lt 180 -and -not (Test-Path $pdfOutput); $i++) {
   Start-Sleep -Milliseconds 500
 }
 
@@ -71,9 +73,24 @@ if (-not (Test-Path $pdfOutput)) {
   throw "PDF export failed: $pdfOutput was not created."
 }
 
+for ($i = 0; $i -lt 60; $i++) {
+  $sizeBefore = (Get-Item $pdfOutput).Length
+  Start-Sleep -Milliseconds 500
+  $sizeAfter = (Get-Item $pdfOutput).Length
+
+  if ($sizeAfter -gt 0 -and $sizeAfter -eq $sizeBefore) {
+    break
+  }
+}
+
 $pdfItem = Get-Item $pdfOutput
+if ($pdfItem.Length -eq 0) {
+  throw "PDF export failed: $pdfOutput is empty."
+}
+
 if ($pdfItem.LastWriteTime -lt $exportStartedAt) {
   throw "PDF export failed: $pdfOutput was not refreshed."
 }
 
-$pdfItem | Select-Object FullName, Length, LastWriteTime
+$htmlItem = Get-Item $htmlOutput
+$htmlItem, $pdfItem | Select-Object FullName, Length, LastWriteTime

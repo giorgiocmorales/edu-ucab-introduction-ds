@@ -11,7 +11,7 @@ All lectures inherit the same revealjs baseline from:
 - `_format/slide-theme.css`: shared typography, footer, logo, and title
   styling.
 - `_format/slide-backgrounds.html`: shared background assignment logic.
-- `_format/backgrounds/` and `_format/assets/`: reusable visual assets only.
+- `_format/assets/`: reusable logos, backgrounds, and other visual assets only.
 
 Theme or layout changes that should affect the full course belong in
 `_format/` or `_metadata.yml`, not inside individual lecture folders.
@@ -46,6 +46,11 @@ Lecture source folders should not keep rendered support folders such as
   `RStudio`, and foundational vector/data-frame concepts.
 - `02-data-wrangling-dplyr/slides.qmd`: lecture on `dplyr`-based data
   wrangling and reshaping.
+- `03-combining-importing-cleaning-data/slides.qmd`: lecture on joins, binds,
+  importing files, and cleaning imported text values.
+- `04-data-visualization-ggplot2/slides.qmd`: lecture on the grammar of
+  `ggplot2`, layered plots, facets, time series, and basic distribution
+  comparisons.
 
 ## Working Rule
 

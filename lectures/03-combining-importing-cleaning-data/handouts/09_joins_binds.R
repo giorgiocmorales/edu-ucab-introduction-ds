@@ -42,6 +42,8 @@ murders_election %>%
 
 # SMALL JOIN EXAMPLE ------------------------------------------------------
 
+# slice() selects rows by position. Here, it keeps a small example.
+
 # Main table
 tab1 <- murders %>%
   slice(1:6) %>%
@@ -81,7 +83,15 @@ semi_join(tab1, tab2, by = "state")
 anti_join(tab1, tab2, by = "state")
 
 
+# JOIN BY ----------------------------------------------------------------
+
+# Same result as by = "state", but the matching rule is explicit
+left_join(tab1, tab2, by = join_by(state))
+
+
 # BINDS ------------------------------------------------------------------
+
+# tibble() creates a tidyverse data frame.
 
 # Bind vectors as columns
 bind_cols(a = 1:3, b = 4:6)
@@ -98,8 +108,14 @@ bind_rows(
 # Values in both vectors
 intersect(1:10, 6:15)
 
+# Values in either vector
+union(1:10, 6:15)
+
 # Values in the first vector but not the second
 setdiff(1:10, 6:15)
+
+# Other way around
+setdiff(6:15, 1:10)
 
 # Same values, different order
 setequal(1:5, 5:1)

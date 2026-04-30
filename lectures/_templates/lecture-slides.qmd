@@ -52,4 +52,4 @@ Left column for concepts, steps, or interpretation.
 ::: {.column width="60%"}
 Right column for code, figures, or worked examples.
 :::
-::::: 
+:::::
