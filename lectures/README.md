@@ -1,43 +1,70 @@
 # Lectures Workspace
 
-`lectures/` is the canonical authoring area for Quarto lecture decks in this course.
+`lectures/` is the canonical authoring area for course slide decks and lecture
+handouts.
 
-## Current Mode
+## Shared Format
 
-The lecture workspace uses a minimal Quarto-native setup based on the official presentations guide:
+All lectures inherit the same revealjs baseline from:
 
-- https://quarto.org/docs/presentations/
-- https://quarto.org/docs/presentations/revealjs/
+- `_metadata.yml`: shared revealjs options and course-wide defaults.
+- `_format/slide-theme.css`: shared typography, footer, logo, and title
+  styling.
+- `_format/slide-backgrounds.html`: shared background assignment logic.
+- `_format/backgrounds/` and `_format/assets/`: reusable visual assets only.
 
-Two active decks now matter:
+Theme or layout changes that should affect the full course belong in
+`_format/` or `_metadata.yml`, not inside individual lecture folders.
 
-- [`00-quarto-guide-preview/slides.qmd`](/d:/Documents/3_Trabajos/UCAB/Profesor/Introduction%20to%20Data%20Science/edu-ucab-introduction-ds/lectures/00-quarto-guide-preview/slides.qmd): feature preview for the baseline revealjs workflow.
-- [`01-course-intro-r-basics/slides.qmd`](/d:/Documents/3_Trabajos/UCAB/Profesor/Introduction%20to%20Data%20Science/edu-ucab-introduction-ds/lectures/01-course-intro-r-basics/slides.qmd): first lecture draft built from legacy presentations 01-02 and scripts 01-06.
+Treat `_format/` as the locked reference format subject to review. Individual
+lectures should diverge only when the lecture needs local assets or content, not
+custom styling.
 
 ## Folder Contract
 
-- `_metadata.yml`: shared revealjs defaults.
-- `_shared/`: reusable shared assets only.
-- `_templates/`: minimal starter files for future lecture decks.
-- `00-quarto-guide-preview/`: preview deck used to evaluate the official Quarto presentation workflow.
-- `01-course-intro-r-basics/`: current Lecture 01 draft and handouts.
-- `NN-short-lecture-name/`: future lecture folders.
+Each lecture should follow the same structure:
 
-## Active Baseline
+- `NN-short-lecture-name/slides.qmd`: canonical slide deck.
+- `NN-short-lecture-name/handouts/`: runnable scripts that follow the lecture
+  flow.
+- `NN-short-lecture-name/assets/`: lecture-specific images only.
 
-The live setup relies on Quarto's native presentation features instead of custom slide-type CSS:
+Handout files should use continuous course-wide numbering, not per-lecture
+resets. Example: `01_...`, `02_...`, ..., `07_...`, `08_...`.
 
-- title slides from document YAML
-- section slides from `#` headings
-- regular slides from `##` headings
-- horizontal rules for untitled slides
-- `.incremental` and `.nonincremental`
-- native `columns`
-- `.notes` for speaker notes
-- slide background attributes such as `background-color` and `background-image`
+Supporting folders:
 
-## Next Step
+- `_templates/`: starter files for new lectures.
+- `00-quarto-guide-preview/`: experimental preview deck kept as reference.
 
-1. Review the Lecture 01 draft.
-2. Decide which slide patterns feel natural once real course content is present.
-3. Only then introduce any additional theme or layout customization.
+Lecture source folders should not keep rendered support folders such as
+`slides_files/` or other Quarto output artifacts. Those belong under `outputs/`.
+
+## Active Lectures
+
+- `01-course-intro-r-basics/slides.qmd`: introduction to the course, `R`,
+  `RStudio`, and foundational vector/data-frame concepts.
+- `02-data-wrangling-dplyr/slides.qmd`: lecture on `dplyr`-based data
+  wrangling and reshaping.
+
+## Working Rule
+
+Legacy material in `legacy/` is reference material only. New edits should land
+in `lectures/`.
+
+## Shareable Outputs
+
+Rendered lecture files live under
+`outputs/rendered-slides/lectures/NN-short-lecture-name/`.
+
+Use lecture-numbered filenames for files intended to be shared with students:
+
+- `lecture-01-slides.html`
+- `lecture-01-slides.pdf`
+- `lecture-02-slides.html`
+
+For PDFs, use the shared export helper:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/export_lecture_pdf.ps1 -LectureDir lectures/NN-short-lecture-name
+```

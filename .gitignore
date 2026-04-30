@@ -6,11 +6,6 @@
 .quarto/
 .codex_tmp/
 
-# renv
-.renv-local/
-renv/library/
-renv/staging/
-
 # Local-only data, references, and archives
 data/**
 !data/

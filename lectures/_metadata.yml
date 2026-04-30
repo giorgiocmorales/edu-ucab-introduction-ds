@@ -2,11 +2,30 @@ author: "Giorgio Cunto"
 format:
   revealjs:
     theme: simple
+    css:
+      - _format/slide-theme.css
+      - _format/code-theme-cobalt-saved.css
+    include-after-body: _format/slide-backgrounds.html
+    width: 1600
+    height: 900
+    center: false
     smaller: true
     slide-number: true
     incremental: false
-    logo: _shared/assets/Logo_UCAB_1.png
+    navigation-mode: linear
+    controls-layout: edges
+    controls-tutorial: false
+    hash: true
+    history: true
+    hash-one-based-index: false
+    fragment-in-url: false
+    transition: none
+    background-transition: none
+    pdf-separate-fragments: false
+    auto-stretch: true
+    logo: _format/assets/Logo_UCAB_white.png
     footer: "Introduction to Data Science"
+    lang: en
 execute:
   echo: true
   warning: false

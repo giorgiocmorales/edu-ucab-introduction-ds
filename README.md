@@ -1,54 +1,113 @@
 # Introduction to Data Science Course
 
-This repository is the instructor production workspace for the elective course _Introduction to Data Science_ offered by the School of Economics of Universidad Catolica Andres Bello (UCAB).
+This repository is the instructor production workspace for the elective course
+_Introduction to Data Science_ offered by the School of Economics of
+Universidad Catolica Andres Bello (UCAB).
 
-It is designed to support:
+The repo is organized around a small number of course artifacts:
 
-- Quarto slide design and standalone lecture rendering
-- a minimal lecture-first authoring system
-- dataset organization for lectures, assignments, and project work
-- preservation of inherited course material in a clearly separated legacy area
-- reference management for sources such as Irizarry and Analytics Edge
+- standardized Quarto lectures
+- runnable script handouts
+- problem sets
+- reusable course scripts and templates
+- local-only data, references, and legacy source material
+- agent instructions, skills, and planning notes for assisted maintenance
 
-Student-facing logistics live on the university platform. This repository is the canonical source for slide creation, internal organization, and reusable teaching assets.
+Student-facing logistics live on the university platform. This repository is
+the canonical source for slide creation, internal organization, and reusable
+teaching assets.
 
 ## Repository Structure
 
 - `lectures/`: canonical lecture workspace.
 - `lectures/_metadata.yml`: shared Quarto revealjs defaults.
-- `lectures/_shared/`: reusable shared assets such as logos.
-- `lectures/_templates/`: minimal starter templates for future lecture decks and handouts.
-- `lectures/00-quarto-guide-preview/`: preview deck based on the official Quarto presentation guide.
-- `lectures/01-course-intro-r-basics/`: first draft lecture built from legacy presentations 01-02 and scripts 01-06.
-- `data/`: datasets used in lectures, assignments, and project work.
-- `R/`: reusable helper scripts for lecture rendering or course utilities.
-- `templates/`: non-lecture scaffolds such as problem-set templates.
-- `references/`: reference books and adaptation notes.
-- `legacy/`: archived material from previous course versions and discarded presentation experiments.
-- `outputs/rendered-slides/`: standalone rendered lecture decks.
-- `outputs/figures/` and `outputs/tables/`: generated artifacts.
+- `lectures/_format/`: locked shared slide format, including theme files,
+  background logic, reusable logos, and backgrounds.
+- `lectures/_templates/`: starter templates for lecture decks and handouts.
+- `problem-sets/`: problem-set source files and problem-set templates.
+- `scripts/`: reusable automation for setup, rendering, and export.
+- `data/`: local datasets used in lectures, assignments, and project work.
+- `references/`: local reference books, PDFs, and adaptation notes.
+- `legacy/`: archived material from previous course versions and discarded
+  presentation experiments.
+- `outputs/`: generated render artifacts, figures, and tables.
+- `plans/`: active and archived repo maintenance plans.
+- `.agents/`: local agent skills and workflow notes.
+- `AGENTS.md`: repo-wide operating contract for coding agents.
 
-## Quarto Workflow
+Each lecture source folder should stay lean:
 
-- The repo is configured for standalone `revealjs` slides.
-- The current baseline follows the official Quarto presentations guide: https://quarto.org/docs/presentations/
-- Render the preview deck with `quarto render lectures/00-quarto-guide-preview/slides.qmd`.
-- Render Lecture 01 with `quarto render lectures/01-course-intro-r-basics/slides.qmd`.
-- Shared defaults live in [`lectures/_metadata.yml`](/d:/Documents/3_Trabajos/UCAB/Profesor/Introduction%20to%20Data%20Science/edu-ucab-introduction-ds/lectures/_metadata.yml).
-- Future decks should start from [`lectures/_templates/lecture-slides.qmd`](/d:/Documents/3_Trabajos/UCAB/Profesor/Introduction%20to%20Data%20Science/edu-ucab-introduction-ds/lectures/_templates/lecture-slides.qmd).
+- `slides.qmd`
+- `handouts/`
+- `assets/`
+
+Generated render artifacts should live under `outputs/`, not inside lecture
+authoring folders.
+
+## Lecture Workflow
+
+The repo is configured for standalone `revealjs` slides. Course-wide defaults
+live in `lectures/_metadata.yml`, while the locked visual reference format
+lives in `lectures/_format/`.
+
+Render checks:
+
+```powershell
+quarto render lectures/00-quarto-guide-preview/slides.qmd
+quarto render lectures/01-course-intro-r-basics/slides.qmd
+quarto render lectures/02-data-wrangling-dplyr/slides.qmd
+```
+
+Future decks should start from `lectures/_templates/lecture-slides.qmd`.
+
+Student-share convention:
+
+- keep the normal Quarto render as `slides.html`
+- create a lecture-numbered export alongside it, such as
+  `lecture-01-slides.html` or `lecture-02-slides.html`
+- PDFs should follow the same pattern, for example `lecture-01-slides.pdf`
+- generate lecture PDFs with `scripts/export_lecture_pdf.ps1` so Reveal
+  backgrounds and resolution are preserved consistently
+
+## Problem Sets
+
+Problem sets live in `problem-sets/`. Shared starter files belong in
+`problem-sets/_templates/`, and individual problem sets should use a numbered
+folder such as:
+
+```text
+problem-sets/01-r-basics/
+  problem-set.qmd
+  assets/
+```
+
+Use script-based templates only when the assignment is meant to be completed as
+an R script rather than a rendered document.
 
 ## Machine Setup
 
-- Use [`SETUP.md`](/d:/Documents/3_Trabajos/UCAB/Profesor/Introduction%20to%20Data%20Science/edu-ucab-introduction-ds/SETUP.md) when cloning the lecture branch onto another computer.
-- The repo now includes `renv` for project-local R package restoration.
-- Bootstrapping from `RStudio` can be done with [`R/setup_project.R`](/d:/Documents/3_Trabajos/UCAB/Profesor/Introduction%20to%20Data%20Science/edu-ucab-introduction-ds/R/setup_project.R).
+Use `SETUP.md` when cloning the course workspace onto another computer.
+Bootstrapping from RStudio can be done with:
+
+```r
+source("scripts/setup_project.R")
+```
+
+This repo no longer uses `renv`. The setup script installs/checks the small set
+of R packages needed by the current lecture and handout workflow.
 
 ## Local-Only Content Policy
 
-- `data/`, `references/`, and `legacy/` are intentionally ignored except for their tracked `README.md` files.
-- That means GitHub stores the lecture system and source-controlled assets, but not local PDFs, archives, or inherited bulk material.
-- A second machine should clone the repo from GitHub and then copy any needed local-only materials from a separate private archive.
+- `data/`, `references/`, and `legacy/` are intentionally ignored except for
+  their tracked `README.md` files.
+- GitHub stores the lecture system and source-controlled assets, but not local
+  PDFs, archives, inherited bulk material, or private datasets.
+- A second machine should clone the repo from GitHub and then copy any needed
+  local-only materials from a separate private archive.
 
 ## Active Status
 
-The presentation setup was reset to a minimal Quarto-native baseline, and Lecture 01 now exists as a content-first draft. The preview deck remains available for structure checks, but the active lecture draft is based directly on the legacy opening presentations and scripts.
+The course scaffold is being streamlined around standardized lectures,
+problem sets, script handouts, and agent-assisted maintenance. The current
+lecture format is centralized in `lectures/_format/` and should be treated as
+the reviewable reference contract before individual lectures diverge.

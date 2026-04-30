@@ -1,133 +1,82 @@
-# CLASS 2 - DATA SCIENCE UCAB
-# Basic exploration in R
+# Lecture 01 - Introduction to Data Science
+# Handout 01: R basics and first objects
 
 # BASIC SHORTCUTS -------------------------------------------------------
 
-# Ctrl+Enter: run line/selection of code
-# Ctrl+Shift+Enter: run complete code
-# Ctrl+Shift+C: insert comment
-# Ctrl+Shift+R: insert section
-# Alt+O: collapse all sections
-# Alt+Shift+O: Open all sections
+# Ctrl + Enter: run current line or selection
+# Ctrl + Shift + Enter: run full script
+# Ctrl + Shift + C: comment or uncomment selection
+# Ctrl + Shift + R: insert section
+# Alt + O: collapse sections
+# Alt + Shift + O: expand sections
 
 
-# BASIC OPERATIONS -----------------------------------------------------
+# BASIC OPERATIONS ------------------------------------------------------
 
-# Addition
-5+2
+5 + 2
+5 - 2
+5 * 2
+10 / 2
 
-# Subtraction
-5-2
-
-# Multiplication
-
-
-# Division
-
-
-# Power
-2^2
-2**2
-
-# Square root
+2 ^ 2
 sqrt(16)
-
-
-# Absolute value
 abs(-10)
 
+round(3.14159)
+round(3.14159, digits = 2)
 
-# VARIABLES AND VECTORS ----------------------------------------------------
+seq(1, 10)
+seq(1, 10, by = 2)
 
-# Assign a certain value to a variable (unitary vector)
+
+# OBJECTS AND VECTORS ---------------------------------------------------
+
 x <- 5
+x
 
-# Overwrite variable
-x <- 5+2
+x <- x + 2
+print(x)
 
-# Create vector of numeric values
 vector_num <- c(5, 2, 10)
+vector_num
 
 
-# BASIC OPERATIONS WITH VECTORS ----------------------------------------
+# VECTORIZED OPERATIONS -------------------------------------------------
 
-
-# Calculate the absolute value of each of the elements of the vector vector_num
 abs(vector_num)
-
-# Add 5 to each element of the vector vector_num
 vector_num + 5
 
-# Minimum and maximum value of vector_num
 min(vector_num)
 max(vector_num)
-
-# Average of elements of the vector vector_num
 mean(vector_num)
-
-# Calculate square root of each element of vector_num
-
+sqrt(vector_num)
 
 
-# VARIABLES AND TEXT VECTORS -------------------------------------------
+# TEXT OBJECTS ----------------------------------------------------------
 
-# Assign text to a variable
 var_text <- "UCAB"
-
-# Create vector of text variables and visualize
 vector_text <- c("Course", "data", "science")
 print(vector_text)
 
-
-# Combine two text variables
-
-# Note that although the year is a number, for these purposes it is placed as a
-# text variable
 var_text2 <- "2025"
 paste(var_text, var_text2)
-
-
-# Join all the elements of a vector in a single string
 paste(vector_text, collapse = " ")
 
-
-# Combine the two previous exercises to obtain
-# a single string that says "Course data science UCAB 2022" and
-# assign it to an object/variable called course
-
-combined <- paste(c(vector_text, var_text, var_text2), collapse = " ")
+course <- paste(c(vector_text, var_text, var_text2), collapse = " ")
+course
 
 
-# INSTALL AND USE PACKAGES --------------------------------------------
+# PACKAGES AND BUILT-IN DATA --------------------------------------------
 
-# Install packages
-install.packages("dslabs")
+# Run once if the package is not installed yet.
+# install.packages("dslabs")
 
-# To open and access the package
 library(dslabs)
 
-
-
-# EXPLORE PREDEFINED DATABASES ---------------------------------
-
-# See list of predefined databases
 data()
 
-
-# Use a predefined database
-
 base <- USArrests
-
-# We inspect the pre-installed USArrests database
-# The help panel allows us to read the documentation of functions or datasets
-# preloaded, to understand more about the arguments or utility.
-
 ?USArrests
 
-
-# Click on the "base" object in the upper right to view the table
-# or run the following command
+# In RStudio you can inspect the dataset in the data viewer.
 View(base)
-
-
-# -------------------------------------------------------------------------

@@ -1,0 +1,74 @@
+.reveal .slides section .code-copy-outer-scaffold,
+.reveal .slides section .sourceCode,
+.reveal .slides section pre.sourceCode,
+.reveal .slides section .cell-output pre,
+.reveal .slides section .cell-output code {
+  background: #002240;
+  color: #ffffff;
+}
+
+.reveal .slides section pre.sourceCode,
+.reveal .slides section code.sourceCode,
+.reveal .slides section pre.sourceCode code,
+.reveal .slides section div.sourceCode,
+.reveal .slides section div.sourceCode pre.sourceCode,
+.reveal .slides section div.sourceCode pre.sourceCode code,
+.reveal .slides section .cell-output pre,
+.reveal .slides section .cell-output pre code,
+.reveal .slides section .cell-output code,
+.reveal .slides section pre > code.sourceCode > span,
+.reveal .slides section code.sourceCode > span {
+  color: #ffffff !important;
+}
+
+.reveal .slides section .sourceCode .co {
+  color: #0088ff;
+  font-style: italic;
+}
+
+.reveal .slides section .sourceCode .cf,
+.reveal .slides section .sourceCode .kw {
+  color: #ff9d00;
+}
+
+.reveal .slides section .sourceCode .fu {
+  color: #ffcc33;
+}
+
+.reveal .slides section .sourceCode .st,
+.reveal .slides section .sourceCode .vs {
+  color: #3ad900;
+}
+
+.reveal .slides section .sourceCode .dv,
+.reveal .slides section .sourceCode .fl,
+.reveal .slides section .sourceCode .bn,
+.reveal .slides section .sourceCode .cn {
+  color: #ff628c;
+}
+
+.reveal .slides section .sourceCode .at {
+  color: #9effff;
+}
+
+.reveal .slides section .sourceCode .va,
+.reveal .slides section .sourceCode .ot,
+.reveal .slides section .sourceCode .pp,
+.reveal .slides section .sourceCode .im {
+  color: #ffffff;
+}
+
+.reveal .slides section .sourceCode .op,
+.reveal .slides section .sourceCode .sc {
+  color: #e1efff;
+}
+
+.reveal .slides section pre.numberSource code > span > a:first-child::before {
+  color: rgba(187, 219, 245, 0.65);
+}
+
+.reveal .slides section .code-copy-button {
+  color: rgba(240, 248, 255, 0.9);
+  background: rgba(0, 0, 0, 0.18);
+  border-color: rgba(112, 196, 255, 0.18);
+}

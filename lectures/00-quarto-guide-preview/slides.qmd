@@ -75,7 +75,7 @@ Mention how notes are opened in Reveal speaker view.
 
 This slide uses a background color attribute.
 
-## Image Background {background-image="../_shared/assets/Logo_UCAB_1.png" background-size="220px" background-repeat="repeat" background-color="white"}
+## Image Background {background-image="../_format/assets/Logo_UCAB_1.png" background-size="220px" background-repeat="repeat" background-color="white"}
 
 This slide uses a repeated image background.
 

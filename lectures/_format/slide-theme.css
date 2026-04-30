@@ -1,0 +1,353 @@
+.reveal {
+  --ucab-text: #f3fbff;
+  --ucab-text-muted: rgba(243, 251, 255, 0.78);
+  --ucab-accent: #5ffbff;
+  --ucab-panel: rgba(7, 17, 31, 0.52);
+  --ucab-panel-strong: rgba(7, 17, 31, 0.7);
+  --ucab-line: rgba(243, 251, 255, 0.18);
+  --ucab-shadow: 0 18px 36px rgba(0, 0, 0, 0.24);
+  --ucab-content-width: 100%;
+  --ucab-message-width: 100%;
+  font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+  font-weight: 400;
+}
+
+.reveal {
+  font-size: 33px;
+  line-height: 1.32;
+}
+
+.reveal h1,
+.reveal h2,
+.reveal h3,
+.reveal h4,
+.reveal h5,
+.reveal h6 {
+  font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.reveal .slides section {
+  padding: 0.5rem 0.85rem 1rem 0.85rem;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.reveal .slides section > *:first-child {
+  margin-top: 0;
+}
+
+.reveal .slides #title-slide,
+.reveal .slides section.level1,
+.reveal .slides section.level2 {
+  color: #f3fbff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.28);
+}
+
+.reveal .slides section.level2 > p,
+.reveal .slides section.level2 > ul,
+.reveal .slides section.level2 > ol,
+.reveal .slides section.level2 > div,
+.reveal .slides section.level2 > blockquote {
+  max-width: var(--ucab-content-width);
+}
+
+.reveal .slides section h1,
+.reveal .slides section h2,
+.reveal .slides section h3,
+.reveal .slides section p,
+.reveal .slides section li,
+.reveal .slides #title-slide .title,
+.reveal .slides #title-slide .subtitle,
+.reveal .slides #title-slide .quarto-title-author,
+.reveal .slides #title-slide .date {
+  color: #f3fbff;
+}
+
+.reveal .slides #title-slide {
+  padding-top: 1.6rem;
+}
+
+.reveal .slides #title-slide .title {
+  font-size: 1.45em;
+  max-width: 22em;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.04;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: rgba(243, 251, 255, 0.82);
+}
+
+.reveal .slides #title-slide .subtitle {
+  font-size: 3.1em;
+  font-weight: 500;
+  line-height: 1.04;
+  max-width: 22em;
+  margin: 0.42rem auto 0 auto;
+  color: #ffffff;
+}
+
+.reveal .slides #title-slide .quarto-title-authors,
+.reveal .slides #title-slide .date {
+  margin-top: 0.9rem;
+}
+
+.reveal .slides section ul,
+.reveal .slides section ol {
+  margin-left: 1.1em;
+}
+
+.reveal .slides section li + li {
+  margin-top: 0.22em;
+}
+
+.reveal .slides section p code,
+.reveal .slides section li code,
+.reveal .slides section h1 code,
+.reveal .slides section h2 code,
+.reveal .slides section h3 code {
+  color: #5ffbff;
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: 0.2rem;
+  padding: 0.05rem 0.2rem;
+}
+
+.reveal .slides section strong {
+  color: #ffffff;
+}
+
+.reveal .slides section em {
+  color: var(--ucab-text-muted);
+}
+
+.reveal .slides section blockquote {
+  border-left: 4px solid rgba(95, 251, 255, 0.5);
+  background: var(--ucab-panel);
+  border-radius: 0.4rem;
+  padding: 0.55rem 0.8rem;
+  box-shadow: var(--ucab-shadow);
+}
+
+.reveal .slides section table {
+  width: 100%;
+  font-size: 0.78em;
+  border-collapse: collapse;
+  background: rgba(7, 17, 31, 0.34);
+  box-shadow: var(--ucab-shadow);
+  border-radius: 0.35rem;
+  overflow: hidden;
+}
+
+.reveal .slides section th,
+.reveal .slides section td {
+  border: 1px solid var(--ucab-line);
+  padding: 0.35rem 0.45rem;
+}
+
+.reveal .slides section th {
+  background: rgba(7, 17, 31, 0.56);
+}
+
+.reveal .slides section img {
+  border-radius: 0.35rem;
+  box-shadow: var(--ucab-shadow);
+}
+
+.reveal .slides .columns {
+  display: flex;
+  width: 100%;
+  align-items: start;
+  gap: 1rem;
+}
+
+.reveal .slides::before,
+.reveal .slides::after {
+  content: "";
+  position: fixed;
+  left: 0.85rem;
+  right: 0.85rem;
+  height: 1px;
+  background: rgba(243, 251, 255, 0.5);
+  z-index: 24;
+  pointer-events: none;
+}
+
+.reveal .slides::before {
+  top: 6.5rem;
+}
+
+.reveal .slides::after {
+  bottom: 3.95rem;
+}
+
+.reveal .slides section.level1,
+.reveal .slides section.level2,
+.reveal .slides #title-slide {
+  padding-top: 2.15rem;
+  padding-bottom: 5rem;
+}
+
+.reveal .slides section.level1 {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.reveal .slides section.level1 h1 {
+  margin-bottom: 0.7rem;
+  width: auto;
+  max-width: 70%;
+  text-align: left;
+  margin-left: 0;
+  margin-right: auto;
+  align-self: flex-start;
+}
+
+.reveal .slides .column > *:first-child {
+  margin-top: 0;
+}
+
+.reveal .slides section .cell,
+.reveal .slides section div.sourceCode,
+.reveal .slides section pre.sourceCode {
+  margin-top: 0.75rem;
+}
+
+.reveal .slides section pre,
+.reveal .slides section pre.sourceCode,
+.reveal .slides section div.sourceCode {
+  font-size: 0.86em;
+}
+
+.reveal .slides section pre code,
+.reveal .slides section pre.sourceCode code,
+.reveal .slides section .cell-output pre code {
+  font-size: 1em;
+  line-height: 1.4;
+}
+
+.reveal .slides section .cell-output,
+.reveal .slides section .cell-output-display,
+.reveal .slides section .code-copy-outer-scaffold,
+.reveal .slides section div.sourceCode,
+.reveal .slides section pre,
+.reveal .slides section pre.sourceCode,
+.reveal .slides section pre code,
+.reveal .slides section pre.sourceCode code,
+.reveal .slides section .cell-output pre,
+.reveal .slides section .cell-output pre code {
+  overflow: visible !important;
+  max-height: none !important;
+  height: auto !important;
+}
+
+.reveal .slides section.main-message {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.7rem;
+}
+
+.reveal .slides section.main-message > p {
+  max-width: var(--ucab-message-width);
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0.65rem 0.9rem;
+  border-left: 5px solid rgba(95, 251, 255, 0.6);
+  background: rgba(7, 17, 31, 0.5);
+  box-shadow: var(--ucab-shadow);
+  border-radius: 0.3rem;
+  font-size: 1.02em;
+}
+
+.reveal .slides section.intervention-slide h2 {
+  color: #ffffff;
+}
+
+.reveal .slides section.intervention-slide > p:first-of-type {
+  display: inline-block;
+  padding: 0.18rem 0.6rem;
+  margin-bottom: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.54em;
+  font-weight: 700;
+  border-radius: 999px;
+  background: rgba(95, 251, 255, 0.18);
+  color: #ffffff;
+}
+
+.reveal .slides section.intervention-slide > ul,
+.reveal .slides section.intervention-slide > ol,
+.reveal .slides section.intervention-slide > p:not(:first-of-type),
+.reveal .slides section.intervention-slide > div {
+  background: rgba(7, 17, 31, 0.44);
+  border: 1px solid rgba(95, 251, 255, 0.15);
+  border-radius: 0.45rem;
+  padding: 0.65rem 0.85rem;
+  box-shadow: var(--ucab-shadow);
+}
+
+.reveal .slides section.intervention-slide > ul,
+.reveal .slides section.intervention-slide > ol {
+  margin-left: 0;
+  padding-left: 1.4rem;
+}
+
+.reveal .backgrounds .slide-background {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.reveal .slide-logo {
+  position: fixed;
+  left: 0.85rem;
+  right: auto;
+  bottom: 0.78rem;
+  top: auto;
+  max-height: 2.6rem !important;
+  width: auto;
+  z-index: 30;
+}
+
+.reveal .footer,
+.reveal .footer a {
+  color: rgba(243, 251, 255, 0.7) !important;
+}
+
+.reveal::after {
+  content: "Giorgio Cunto Morales";
+  position: fixed;
+  right: 0.85rem;
+  bottom: 0.78rem;
+  color: rgba(243, 251, 255, 0.7);
+  font-size: 0.46em;
+  line-height: 1;
+  z-index: 31;
+  pointer-events: none;
+}
+
+.reveal .slide-number,
+.reveal .slide-number a {
+  color: rgba(243, 251, 255, 0.7) !important;
+  font-size: 0.6em !important;
+}
+
+@media (max-width: 1100px) {
+  .reveal {
+    font-size: 28px;
+  }
+
+  .reveal .slides section.main-message > p,
+  .reveal .slides section.intervention-slide > ul,
+  .reveal .slides section.intervention-slide > ol,
+  .reveal .slides section.intervention-slide > p:not(:first-of-type),
+  .reveal .slides section.intervention-slide > div {
+    padding: 0.5rem 0.65rem;
+  }
+}

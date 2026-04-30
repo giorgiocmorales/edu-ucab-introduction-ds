@@ -1,25 +1,55 @@
 ---
-title: "Session XX"
+title: "Lecture NN"
 subtitle: "Lecture Subtitle"
 format: revealjs
 ---
 
+## Main Message {.main-message}
+
+*Write the central takeaway of the lecture in one or two short sentences.*
+
+*If needed, add a second sentence that clarifies why the topic matters for analysis or practice.*
+
 # Section Title
 
-## First Slide
+## Concept Slide
+
+Introduce the idea before showing any code.
 
 - Main point
 - Supporting point
 - Example or implication
 
+## Code Example
+
+Explain what the code is meant to do and why the example matters.
+
+```{r}
+# Example code used in class
+```
+
+State the result or interpretation after the code if students should notice something specific.
+
+## Intervention Space {.intervention-slide}
+
+Question to ponder.
+
+::: fragment
+- Write one short conceptual question.
+:::
+
+::: fragment
+- *Answer:* Add a short answer that can be revealed later.
+:::
+
 ## Two Columns
 
 ::::: columns
 ::: {.column width="40%"}
-Left column
+Left column for concepts, steps, or interpretation.
 :::
 
 ::: {.column width="60%"}
-Right column
+Right column for code, figures, or worked examples.
 :::
-:::::
+::::: 
